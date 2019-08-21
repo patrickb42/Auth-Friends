@@ -6,6 +6,8 @@ import Login from './components/Login';
 import PrivateRoute from './components/PrivateRoute';
 import FriendsList from './components/FriendsList';
 
+import './App.css';
+
 const App = (props) => {
   return (<>
     <Router>

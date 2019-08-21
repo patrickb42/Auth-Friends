@@ -5,11 +5,10 @@ import * as Yup from 'yup';
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 
-const NewFriendForm = ({ values, errors, touched, status }) => {
-  const [users, setUsers] = useState([]);
-  
+const NewFriendForm = ({ values, errors, touched, status, setFriends }) => {
   useEffect(() => {
-    status && setUsers((users) => [...users, status]);
+    if (!status) return;
+    setFriends(status.data);
   }, [status]);
 
   return (<>
@@ -46,9 +45,15 @@ export default withFormik({
       .required(),
   }),
 
-  handleSubmit(values, { setStatus }) {
+  handleSubmit(values, { setStatus, resetForm }) {
     (async () => {
-      setStatus(await axiosWithAuth().post('localhost:5000', values));
+      try {
+        const response = await axiosWithAuth().post('http://localhost:5000/api/friends', values);
+        setStatus(response);
+        resetForm();
+      } catch (error) {
+        console.error(error);
+      }
     })();
   },
 })(NewFriendForm);
