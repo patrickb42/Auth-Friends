@@ -11,7 +11,7 @@ const App = (props) => {
     <Router>
       <Route exact path="/" component={LandingRedirect} />
       <Route path="/login" component={Login} />
-      <Route path="/friends" component={FriendsList} />
+      <PrivateRoute path="/friends" component={FriendsList} />
     </Router>
   </>);
 }
