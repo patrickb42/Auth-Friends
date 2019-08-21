@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Field, withFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+
+import axiosWithAuth from '../utils/axiosWithAuth';
 
 
 const NewFriendForm = ({ values, errors, touched, status }) => {
@@ -47,7 +48,7 @@ export default withFormik({
 
   handleSubmit(values, { setStatus }) {
     (async () => {
-      setStatus(await axios.post('https://reqres.in/api/users', values));
+      setStatus(await axiosWithAuth().post('localhost:5000', values));
     })();
   },
 })(NewFriendForm);

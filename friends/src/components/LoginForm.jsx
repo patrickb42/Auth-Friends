@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Field, withFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+import Axios from 'axios';
 
 
-const LoginForm = ({ values, errors, touched, status }) => {
-  const [users, setUsers] = useState([]);
-  
+const LoginForm = ({ values, errors, touched, status, setLoggingIn }) => {
   useEffect(() => {
-    status && setUsers((users) => [...users, status]);
+    if (!status) return;
+    setLoggingIn(status.loggingIn);
+    status.response.data && localStorage.setItem('token', status.response.data.payload);
   }, [status]);
 
   return (<>
     <Form>
       {touched.username && errors.username && <p>{errors.username}</p>}
-      <Field type="text" name="name" placeholder="Name" />
+      <Field type="text" name="username" placeholder="Username" />
       {touched.password && errors.password && <p>{errors.password}</p>}
       <Field type="password" name="password" placeholder="Password" />
       <button type="submit">Login</button>
@@ -39,7 +39,21 @@ export default withFormik({
 
   handleSubmit(values, { setStatus }) {
     (async () => {
-      setStatus(await axios.post('https://reqres.in/api/users', values));
+      let response = {};
+
+      setStatus({
+        loggingIn: true,
+        response,
+      });
+      try {
+        response = await Axios.post('http://localhost:5000/api/login', values);
+        setStatus({
+          loggingIn: false,
+          response,
+        });
+      } catch (error) {
+        console.error('An error occured while logging in\n', error);
+      }
     })();
   },
 })(LoginForm);
