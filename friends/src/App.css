@@ -1,0 +1,11 @@
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friend {
+  border: 1px solid black;
+  width: 75%;
+  margin-top: 1rem;
+}
